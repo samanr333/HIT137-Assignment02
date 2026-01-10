@@ -62,10 +62,11 @@ def decryption(shift1, shift2):
 
 # Review function that checks if the decrypted text and the raw text file are same or not
 def review():
-    # Reading the data of encrypted_text.txt and decrypted_text.txt
+    # Reading the data of encrypted_text.txt and decrypted_text.txt files
     with open("raw_text.txt", "r") as raw, open("decrypted_text.txt", "r") as dec:
         raw_text = raw.read()
         decrypted_text = dec.read()
+        # Checkiing if the raw and decrypted text are same or not
         if raw_text == decrypted_text:
             print("Decryption successful")
         else:
