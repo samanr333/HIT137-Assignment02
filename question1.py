@@ -71,3 +71,16 @@ def review():
             print("Decryption successful")
         else:
             print("Decryption unsuccessful")
+
+# Main function
+def main():
+    # Taking the value of shift1 and shift2 as an input
+    shift1 = int(input("Enter the value of shift1: "))
+    shift2 = int(input("Enter the value of shift2: "))
+    # Calling encryption, decryption, and review function
+    encryption(shift1, shift2)
+    decryption(shift1, shift2)
+    review()
+
+if __name__ == "__main__":
+    main()
