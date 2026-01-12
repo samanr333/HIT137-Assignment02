@@ -1,31 +1,5 @@
 # https://docs.python.org/3/library/turtle.html
 import turtle
- 
-# Function to draw one side of the shape
-def draw_side(length, depth):
-    # If there is no more detail to draw, just draw a straight line
-    if depth == 0:
-        turtle.forward(length)
-        return
- 
-    # Splitting the line into 3 smaller pieces
-    new_length = length / 3
- 
-    # Drawing the first straight piece
-    draw_side(new_length, depth - 1)
- 
-    # Making two sides of an equilateral triangle
-    turtle.right(60)
-    draw_side(new_length, depth - 1)
- 
-    turtle.left(120)
-    draw_side(new_length, depth - 1)
- 
-    # Step 4: Turning right again and draw the last piece
-    turtle.right(60)
-    draw_side(new_length, depth - 1)
- 
- 
 # Main Function
 def main():
     # Ask the user how they want their shape to look
