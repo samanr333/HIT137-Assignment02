@@ -63,3 +63,98 @@ def find_seasonal_average(combined_file):
     with open("temperatures/average_temp.txt", "w") as file:
         for season, avg in results.items():
             file.write(f"{season}: {avg}°C\n")
+
+
+# This function finds which station has the largest temperature range
+def find_temperature_range(combined_file):
+ 
+    # Find the hottest month for each station record
+    # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.max.html
+    # MaxTemp is added column which has the highest recorded temperature of that station
+    combined_file["MaxTemp"] = combined_file[months].max(axis=1)
+ 
+    # Find the coldest month for each station record
+    # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.min.html
+    # MinTemp is added column which has the lowest recorded temperature of that station
+    combined_file["MinTemp"] = combined_file[months].min(axis=1)
+ 
+    # Grouping all records by station name and finding the highest, and the lowest temperature ever
+    # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.groupby.html
+    station_data = combined_file.groupby("STATION_NAME").agg(
+        MaxTempValue=("MaxTemp", "max"),
+        MinTempValue=("MinTemp", "min")
+    )
+ 
+    # Calculate the temperature range
+    station_data["Range"] = station_data["MaxTempValue"] - station_data["MinTempValue"]
+ 
+    # Find the largest temperature range
+    max_range = station_data["Range"].max()
+ 
+    # Find all stations that have this largest range
+    largest_range_stations = station_data[station_data["Range"] == max_range]
+ 
+    # Save the result into a text file
+    with open("temperatures/largest_temp_range_station.txt", "w") as file:
+        for station, row in largest_range_stations.iterrows():
+            file.write(
+                f"{station}: Range {row['Range']:.2f}°C "
+                f"(Max: {row['MaxTempValue']:.2f}°C, Min: {row['MinTempValue']:.2f}°C)\n"
+            )
+ 
+ 
+# This function finds the most stable and most unstable temperature stations
+def find_temperature_stability(combined_file):
+ 
+    # Converting the table from wide format to long format
+    # This puts all temperatures into one column
+    # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.melt.html
+    temp_long = combined_file.melt(
+        id_vars=["STATION_NAME"],
+        value_vars=months,
+        var_name="Month",
+        value_name="Temperature"
+    )
+ 
+    # Calculating the standard deviation for each station
+    # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.std.html
+    station_std = temp_long.groupby("STATION_NAME")["Temperature"].std()
+ 
+    # Find the smallest and biggest standard deviation
+    min_std = station_std.min()
+    max_std = station_std.max()
+ 
+    # Find the most stable station(s)
+    most_stable = station_std[station_std == min_std]
+ 
+    # Find the most variable station
+    most_variable = station_std[station_std == max_std]
+ 
+    # Saving results into a text file
+    with open("temperatures/temperature_stability_stations.txt", "w") as file:
+ 
+        # Write most stable station(s)
+        for station, std in most_stable.items():
+            file.write(f"Most Stable: {station}: StdDev {std:.2f}°C\n")
+ 
+        # Write most variable station(s)
+        for station, std in most_variable.items():
+            file.write(f"Most Variable: {station}: StdDev {std:.2f}°C\n")
+ 
+ 
+# Main function that runs everything
+def main():
+    # Loading and combining all CSV data
+    combined_data = create_combined_data_file()
+ 
+    # Calculating seasonal averages
+    find_seasonal_average(combined_data)
+ 
+    # Finding station with largest temperature range
+    find_temperature_range(combined_data)
+ 
+    # Finding most stable and most unstable stations
+    find_temperature_stability(combined_data)
+ 
+if __name__ == "__main__":
+    main()
