@@ -8,7 +8,7 @@ import glob
 def create_combined_data_file():
  
     # Find all CSV files inside the temperatures folder
-    all_files = glob.glob("temperatures/*.csv")
+    all_files = glob.glob("/home/loki/Desktop/CDU/SoftwareNow-HIT137/Assignment/Assignment2/codes/temperatures/*.csv")
  
     # Create an empty list to store all CSV data
     file_list = []
@@ -60,7 +60,7 @@ def find_seasonal_average(combined_file):
         results[season] = round(season_avg, 2)
  
     # Save the seasonal averages into a text file
-    with open("temperatures/average_temp.txt", "w") as file:
+    with open("/home/loki/Desktop/CDU/SoftwareNow-HIT137/Assignment/Assignment2/codes/temperatures/average_temp.txt", "w") as file:
         for season, avg in results.items():
             file.write(f"{season}: {avg}°C\n")
 
@@ -95,7 +95,7 @@ def find_temperature_range(combined_file):
     largest_range_stations = station_data[station_data["Range"] == max_range]
  
     # Save the result into a text file
-    with open("temperatures/largest_temp_range_station.txt", "w") as file:
+    with open("/home/loki/Desktop/CDU/SoftwareNow-HIT137/Assignment/Assignment2/codes/temperatures/largest_temp_range_station.txt", "w") as file:
         for station, row in largest_range_stations.iterrows():
             file.write(
                 f"{station}: Range {row['Range']:.2f}°C "
@@ -131,7 +131,7 @@ def find_temperature_stability(combined_file):
     most_variable = station_std[station_std == max_std]
  
     # Saving results into a text file
-    with open("temperatures/temperature_stability_stations.txt", "w") as file:
+    with open("/home/loki/Desktop/CDU/SoftwareNow-HIT137/Assignment/Assignment2/codes/temperatures/temperature_stability_stations.txt", "w") as file:
  
         # Write most stable station(s)
         for station, std in most_stable.items():
